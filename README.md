@@ -15,17 +15,7 @@ As for map component I opted to use the Angular Google Maps module and it is set
 ## Setting up the environment
 
 [Node.js and npm set-up.](https://www.sitepoint.com/beginners-guide-node-package-manager/) \
-It is necessary for you to run some `npm install` commands as the project in this repository is devoid of some of the crucial modules.
-
-`npm i @angular/cli` \
-`npm i @angular/flex-layout` \
-`npm i @angular/google-maps` \
-`npm i @angular/cdk` \
-`npm i @angular/animations` \
-`npm i @angular/common` \
-`npm i @angular/material` \
-`npm i @angular/core` \
-`npm i @angular/youtube-player`
+It is necessary for you to run `npm install` command as the project in this repository is devoid of some of the crucial modules.
 
 ## Task requirements
 
