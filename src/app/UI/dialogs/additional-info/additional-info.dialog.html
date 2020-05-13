@@ -1,0 +1,35 @@
+<mat-dialog-content>
+<div class="text-center">
+  <h2>{{data[0].title}} - detail</h2>
+</div>
+
+<p>Full address: {{adress}}, {{city}}, {{zipcode}}, Netherlands</p>
+
+<p>Links:</p>
+<div *ngFor="let url of data[0].urls">
+  <a [href]="url">{{url}}</a>
+</div>
+
+<br>
+
+  <mat-grid-list [gutterSize]="10" cols="3">
+
+    <ng-container *ngFor="let img of data[0].media">
+      <mat-grid-tile>
+        <img *ngIf="!img.url.includes('youtube')" [src]="img.url">
+        <youtube-player *ngIf="img.url.includes('youtube')" [videoId]="getVideoId(img.url)"></youtube-player>
+      </mat-grid-tile>
+    </ng-container>
+
+  </mat-grid-list>
+</mat-dialog-content>
+
+<br>
+
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <button *ngIf="data[1]==0" color="accent" mat-raised-button (click)="closeDialog()">Close</button>
+  <button *ngIf="data[1]==0" color="accent" mat-raised-button (click)="showOnMap()">Show on map</button>
+
+  <button *ngIf="data[1]==1" color="accent" mat-raised-button (click)="closeDialog()">Show all venues</button>
+  <button *ngIf="data[1]==1" color="accent" mat-raised-button (click)="showOnMap()">Show events</button>
+</div>

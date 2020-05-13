@@ -1,0 +1,22 @@
+.example-table-container {
+  position: relative;
+  overflow: auto;
+}
+
+mat-header-row {
+  background: #3eb3e3;
+}
+
+.data-table-row-class:hover {
+  background-color: rgba(240, 248, 255, 0.55);
+  cursor: pointer;
+}
+
+.mat-header-cell {
+  padding-left: 24px;
+}
+
+.mat-cell {
+  padding-left: 24px;
+}
+

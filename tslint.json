@@ -71,6 +71,7 @@
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
+    "no-shadowed-variable": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [
       true,

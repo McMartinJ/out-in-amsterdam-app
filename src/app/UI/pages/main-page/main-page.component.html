@@ -1,0 +1,194 @@
+<div class="wrapper-big" *ngIf="venues">
+
+  <div fxLayout="column">
+
+    <br>
+
+    <div fxLayout="row">
+      <mat-form-field fxFlex="20">
+        <mat-label>Search venues</mat-label>
+        <input autocomplete="off"
+               matInput
+               [value]="filterVenueText"
+               (keyup)="applyVenueFilter($event.target.value)"
+               placeholder="Search by name, postcode or start year">
+      </mat-form-field>
+
+      <mat-form-field fxFlexOffset="5"
+                      fxFlex="20">
+        <mat-label>Search venue by city</mat-label>
+        <mat-select (selectionChange)="applyCityFilter()"
+                    [(value)]="uniqueCityNames" multiple>
+
+          <mat-select-trigger>
+            {{uniqueCityNames[0]}}
+            <span *ngIf="uniqueCityNames.length > 1">
+        (+{{uniqueCityNames.length - 1}} {{uniqueCityNames.length === 2 ? 'other' : 'others'}})
+      </span>
+          </mat-select-trigger>
+
+          <mat-option *ngFor="let city of cityNames"
+                      [value]="city">
+            {{city}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlexOffset="5" fxFlex="20">
+        <mat-label>Search events</mat-label>
+        <input autocomplete="off"
+               matInput
+               [value]="filterEventText"
+               (keyup)="applyEventFilter($event.target.value)"
+               placeholder="Search by name, year or month">
+      </mat-form-field>
+
+      <button mat-raised-button
+              color="accent"
+              (click)="clearFilters()"
+              fxFlexOffset="20" fxFlex>
+        Clear filters
+      </button>
+    </div>
+
+    <br>
+
+    <mat-card class="relative mat-elevation-z8">
+      <mat-tab-group [selectedIndex]="tabSelector" dynamicHeight>
+        <mat-tab label="Venues">
+          <mat-table
+            [dataSource]="venueSource">
+
+            <ng-container matColumnDef="title">
+              <mat-header-cell *matHeaderCellDef>Venue name</mat-header-cell>
+              <mat-cell *matCellDef="let venue">{{venue.title}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="city">
+              <mat-header-cell *matHeaderCellDef>City</mat-header-cell>
+              <mat-cell *matCellDef="let venue">{{venue.location.city}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="zipcode">
+              <mat-header-cell *matHeaderCellDef>Postcode</mat-header-cell>
+              <mat-cell *matCellDef="let venue">{{venue.location.zipcode}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="adress">
+              <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+              <mat-cell *matCellDef="let venue">{{venue.location.adress}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="startdate">
+              <mat-header-cell *matHeaderCellDef>Start Year</mat-header-cell>
+              <mat-cell *matCellDef="let venue">{{venue.dates.startdate}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedVenueColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedVenueColumns;" class="data-table-row-class"
+                     (click)="openVenueDialog(row)"></mat-row>
+
+          </mat-table>
+
+          <mat-paginator #venuePaginator
+                         [pageSizeOptions]="[10, 20, 50, 100, 500]"
+                         [pageSize]="10"
+                         showFirstLastButtons>
+          </mat-paginator>
+        </mat-tab>
+
+        <mat-tab label="Events">
+          <mat-table
+            [dataSource]="eventSource"
+            matSort
+            matSortActive="distanceFromVenue"
+            matSortDisableClear
+            matSortDirection="asc">
+
+            <ng-container matColumnDef="title">
+              <mat-header-cell *matHeaderCellDef>Event name</mat-header-cell>
+              <mat-cell *matCellDef="let event">{{event.title}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="dates">
+              <mat-header-cell *matHeaderCellDef>Dates</mat-header-cell>
+              <mat-cell *matCellDef="let event">{{event.dates.startdate}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="distanceFromVenue">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Distance from selected venue in meters</mat-header-cell>
+              <mat-cell *matCellDef="let event">{{event.distanceFromVenue}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedEventColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedEventColumns;"></mat-row>
+
+          </mat-table>
+
+          <mat-paginator #eventPaginator
+                         [pageSizeOptions]="[10, 20, 50, 100, 500]"
+                         [pageSize]="10"
+                         showFirstLastButtons>
+          </mat-paginator>
+        </mat-tab>
+
+        <mat-tab label="Map">
+          <google-map [center]="center"
+                      [zoom]="zoom"
+                      width="1200"
+                      height="750"
+                      (mapRightclick)="showAllVenues()">
+
+            <map-circle *ngIf="isVenueSelected"
+                        [center]="center"
+                        [radius]="radius" hidden
+                        (circleClick)="getVenueDialogFromMarker(center.lat, center.lng)"
+                        (circleRightclick)="showAllVenues()">
+            </map-circle>
+
+            <map-marker *ngFor="let marker of getFilteredVenuePositions()"
+                        [position]="marker"
+                        [options]="venueMarkerOptions"
+                        (mapClick)="getVenueDialogFromMarker(marker.lat, marker.lng)"
+                        (mapRightclick)="showAllVenues()"
+            ></map-marker>
+
+            <ng-container *ngFor="let marker of markers">
+              <map-marker *ngIf="marker.isShown && isVenueSelected"
+                          [position]="marker"
+                          [options]="eventMarkerOptions"
+                          (mapRightclick)="showAllVenues()"
+              ></map-marker>
+            </ng-container>
+          </google-map>
+
+          <br>
+
+
+          <div fxLayout="row" fxLayoutAlign="space-evenly center">
+            <div *ngIf="isVenueSelected" fxLayout="column" fxLayoutAlign="center center">
+              <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png">
+              <p>Venue with events in the same place</p>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png">
+              <p>Venue</p>
+            </div>
+            <div *ngIf="isVenueSelected" fxLayout="column" fxLayoutAlign="center center">
+              <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png">
+              <p>Events lees than a kilometer away</p>
+            </div>
+          </div>
+
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <i>Click on a venue to display more information</i>
+            <i *ngIf="isVenueSelected">Right-click anywhere on the map to exit selected venue view</i>
+          </div>
+
+          <br>
+
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

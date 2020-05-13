@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #F4F5F7;
+}
+
+.wrapper-big {
+  width: 90%;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+mat-card {
+  padding: 0 !important;
+}
+
+/*::ng-deep .map-container {*/
+/*  width: fit-content !important;*/
+/*}*/
+
+.relative {
+  position: relative;
+}
