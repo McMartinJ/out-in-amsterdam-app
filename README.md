@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Comments
 
-Requirement-wise I think I met every single one of them. I reckon there could be some optimization surrounding cycles, how some data is assigned. All and all... what a fun project! I had some nice breakthroughs and at the end was pretty pleased with how it turned out. \
+Requirement-wise I think I met every single one of them. I reckon there could be some optimization surrounding cycles, how some data is assigned. All and all... what a fun project! I had some nice breakthroughs and at the end was pretty pleased with how it turned out.
 
 Application tested on Chrome, MS Edge, Firefox, Opera and Internet Explorer with difficulties to run it only on the last one. \
 As for map component I opted to use the Angular Google Maps module and it is set up with my personal API Key. To assign your own key go to `index.html` and change `YOUR_API_KEY` to one you get from [Google Cloud Platform.](https://developers.google.com/maps/documentation/javascript/get-api-key) Do not forget to enable your Maps JavaScript API.
@@ -15,9 +15,16 @@ As for map component I opted to use the Angular Google Maps module and it is set
 ## Setting up the environment
 
 [Node.js and npm set-up.](https://www.sitepoint.com/beginners-guide-node-package-manager/) \
-It is necessary for you to run some `npm install` commands as the project in this repository is devoid of some of the crucial modules. \
+It is necessary for you to run some `npm install` commands as the project in this repository is devoid of some of the crucial modules.
+
+`npm i @angular/cli` \
 `npm i @angular/flex-layout` \
 `npm i @angular/google-maps` \
+`npm i @angular/cdk` \
+`npm i @angular/animations` \
+`npm i @angular/common` \
+`npm i @angular/material` \
+`npm i @angular/core` \
 `npm i @angular/youtube-player`
 
 ## Task requirements
